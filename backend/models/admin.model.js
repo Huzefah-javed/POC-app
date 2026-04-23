@@ -20,3 +20,37 @@ export const createBlog=async(title, description, imgUrl, adminId)=>{
         return response
     }
 }
+
+export const updateBlog=async(title, description, blogId)=>{
+    let response={}
+    try {
+        const blogObjectId = new mongoose.Types.ObjectId(blogId)
+            await blogs.updateOne({_id:blogObjectId},{title, description})
+        response.success=true
+        response.status=200
+        response.msg="Blog updated successfully"
+        return response
+        } catch (error) {
+        response.success=false
+        response.status=500
+        response.msg="something wrong happens while updating blog"
+        return response
+    }
+}
+
+export const deleteBlog=async(blogId)=>{
+    let response={}
+    try {
+        const blogObjectId = new mongoose.Types.ObjectId(blogId)
+            await blogs.deleteOne({_id:blogObjectId})
+        response.success=true
+        response.status=200
+        response.msg="Blog deleted successfully"
+        return response
+        } catch (error) {
+        response.success=false
+        response.status=500
+        response.msg="something wrong happens while deleting blog"
+        return response
+    }
+}
