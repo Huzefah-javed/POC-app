@@ -9,3 +9,8 @@ export const loginController=async(req, res, next)=>{
     assignJWTCookie(response.data, res)
    return res.status(response.status).json({msg:response.msg})
 }
+
+export const logoutController=async(req, res, next)=>{
+    res.clearCookie("authCookie")
+   return res.json({msg:"logout successfully"})
+}

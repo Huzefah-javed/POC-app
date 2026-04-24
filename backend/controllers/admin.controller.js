@@ -1,6 +1,6 @@
 import { uploadToCloud } from "../helpers/cloud.upload.js"
 import { roleChecker } from "../helpers/roleChecker.js"
-import { createBlog, deleteBlog, updateBlog } from "../models/admin.model.js"
+import { createBlog, deleteBlog, getBlogs, updateBlog } from "../models/admin.model.js"
 import fs from "fs/promises"
 
 export const createBlogController =async(req, res, next)=>{
@@ -49,16 +49,16 @@ export const deleteBlogController =async(req, res, next)=>{
     return res.status(response.status).json({msg:response.msg})
 }
 
-export const blogsController =async(req, res, next)=>{
+export const getBlogsController =async(req, res, next)=>{
     try {
         roleChecker("admin", req.user.role)
     } catch (error) {
         return next({status:401, msg:"Unauthorized route"})
     }
 
-    const { pageNo } = req.params
+    const { pageNo=0 } = req.query
 
-    const response = await getBlog(pageNo)
+    const response = await getBlogs(pageNo)
     if(!response.success) return next({status:response.status, msg:response.msg})
-    return res.status(response.status).json({msg:response.msg})
+    return res.status(response.status).json({data:response.data})
 }
