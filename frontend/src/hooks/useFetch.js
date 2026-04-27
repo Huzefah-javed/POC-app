@@ -5,7 +5,7 @@ export const useFetch=(fetchFn, queryKeyArr)=>{
 
   const {data,error,isLoading, isError} = useQuery({
     queryKey:queryKeyArr,
-    queryFn: fetchFn
+    queryFn: fetchFn,
   })
 
   return {data,error,isLoading, isError}
