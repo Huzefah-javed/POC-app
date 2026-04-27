@@ -1,12 +1,29 @@
 import {Button, Card, Checkbox, Label, TextInput, Dropdown, DropdownItem} from "flowbite-react"
 import { useState } from "react";
-
+import { useExecute } from "../hooks/useExecute";
+import { login } from "../apis/main.api";
+import {toast, ToastContainer} from "react-toastify"
+import Loader from "../components/Loader";
 export const LoginForm=()=>{
+  
     const [loginForm, setLoginForm] = useState({
     email:"",
     password: "",
     role: ""
     })
+
+const onSuccess = ()=> toast.success("Login successful")
+const onError = ()=> toast.error("Login failed")
+
+  const {data,error,isError,isPending, mutate} =  useExecute(login, onSuccess, onError)
+
+  if(isPending) return <Loader/>
+  if(isError) toast.error(error)
+
+const handleSubmit=(e)=>{
+  e.preventDefault()
+ mutate(loginForm)
+}
 
     return<>
                 <div className="flex justify-center items-center min-h-screen dark:bg-gray-700">
@@ -17,7 +34,7 @@ export const LoginForm=()=>{
   <p className="text-sm text-gray-500 text-center mb-4">
     Please enter your details to continue.
   </p>
-    <form className="flex flex-col gap-4">
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       <div>
         <div className="mb-2 block">
           <Label htmlFor="email" value="Your email" >Email</Label>
