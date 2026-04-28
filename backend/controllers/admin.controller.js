@@ -16,7 +16,7 @@ export const createBlogController =async(req, res, next)=>{
         return next({status:500, msg:"Upload failed, plz try again"})
     }
      const response = await createBlog(title, description, url, req.user._id)
-     fs.unlinkSync(req.file.path)
+     fs.unlink(req.file.path)
      if(!response.success) return next({status:response.status, msg:response.msg})
      return res.status(response.status).json({msg:response.msg})
 }
@@ -46,6 +46,7 @@ export const deleteBlogController =async(req, res, next)=>{
 
     const response = await deleteBlog(id)
     if(!response.success) return next({status:response.status, msg:response.msg})
+    // await deleteFromCloud()
     return res.status(response.status).json({msg:response.msg})
 }
 

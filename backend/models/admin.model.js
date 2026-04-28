@@ -44,10 +44,11 @@ export const deleteBlog=async(blogId)=>{
     let response={}
     try {
         const blogObjectId = new mongoose.Types.ObjectId(blogId)
-            await blogs.deleteOne({_id:blogObjectId})
+          const data =  await blogs.findByIdAndDelete(blogObjectId)
         response.success=true
         response.status=200
         response.msg="Blog deleted successfully"
+        response.data = data
         return response
         } catch (error) {
         response.success=false

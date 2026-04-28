@@ -28,7 +28,7 @@ const {data,error,isError,isLoading} = useFetch(()=>getBlogs(pageNo),["AdminBlog
          <h2 className="text-2xl font-bold text-gray-900 dark:text-white w-full p-1 ">{post.title}</h2>
          <p className="text-1xl text-gray-900 dark:text-white w-full p-1">{post.description}</p>
         { post.imgUrl &&
-          <img className="w-full h-fit" src={post.imgUrl} alt="error" />
+          <img className="w-full max-h-1/2" src={post.imgUrl} alt="error" />
         } 
       </Card>
         )

@@ -4,6 +4,7 @@ import { useExecute } from "../hooks/useExecute";
 import { login } from "../apis/main.api";
 import {toast, ToastContainer} from "react-toastify"
 import Loader from "../components/Loader";
+import { useNavigate } from "react-router";
 export const LoginForm=()=>{
   
     const [loginForm, setLoginForm] = useState({
@@ -11,6 +12,9 @@ export const LoginForm=()=>{
     password: "",
     role: ""
     })
+
+
+const navigate = useNavigate()
 
 const onSuccess = ()=> toast.success("Login successful")
 const onError = ()=> toast.error("Login failed")
@@ -24,7 +28,10 @@ const handleSubmit=(e)=>{
   e.preventDefault()
  mutate(loginForm)
 }
-
+if (data?.data){
+  localStorage.setItem("userInfo", JSON.stringify(data.data) )
+  data.data.role === "admin"? navigate("/admin/blogs"):navigate("/user/blogs")
+} 
     return<>
                 <div className="flex justify-center items-center min-h-screen dark:bg-gray-700">
   <Card className="max-w-md w-full">

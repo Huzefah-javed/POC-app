@@ -4,6 +4,7 @@ import { BlogPage } from "./pages/admin/blogs.admin"
 import { SidebarComponent } from "./components/sidebar"
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom"
 import { Structure } from "./structure/Structure"
+import { CreatePost } from "./pages/admin/CreatePost.admin"
 
 export const App =()=>{
 const router = createBrowserRouter([
@@ -14,11 +15,11 @@ const router = createBrowserRouter([
     {
         path:"/admin",
         element:<Structure navMenu={
-            [{name:"Blogs", link:"/blogs"}, {name:"Profile", link:"/profile"}]
+            [{name:"Blogs", link:"/admin/blogs"}, {name:"Profile", link:"/profile"}, {name:"Create Post", link:"/admin/createPost"},]
         }/>,
         children:[
-            {path:"/admin/blogs", element:<BlogPage/>}
-            // {path:"/profile", element:</>}
+            {path:"/admin/blogs", element:<BlogPage/>},
+            {path:"/admin/createPost", element:<CreatePost/>}
                 
         ]
     },
