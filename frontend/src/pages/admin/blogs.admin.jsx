@@ -1,21 +1,27 @@
 import { toast } from "react-toastify"
-import { getBlogs } from "../../apis/admin/admin.api"
+import { deletePost, getBlogs } from "../../apis/admin/admin.api"
 import Loader from "../../components/Loader"
 import { useFetch } from "../../hooks/useFetch"
 import { useState } from "react"
 import {Avatar, Badge, Button, Card} from "flowbite-react"
 import { UpdatePost } from "../../components/UpdatePost"
+import { useExecute } from "../../hooks/useExecute"
 
 export const BlogPage=()=>{
 const [pageNo, setPageNo] = useState(1)
 const [updatedPost, setUpdatedPost] = useState({
-  title:"", description:"", postId:""
+  title:"", description:"", postId:""                                                       
 })
 
 const {data,error,isError,isLoading} = useFetch(()=>getBlogs(pageNo),["AdminBlogs",pageNo])
 
-  if(isLoading) return <Loader/>
-  if(isError) toast.error(error)
+const onSuccess = ()=> toast.success("Post deleted successfully")
+const onError = ()=> toast.error("Post deletion operation failed")
+
+const deleteBlog = useExecute(deletePost, onSuccess, onError) 
+
+  if(isLoading || deleteBlog.isPending) return <Loader/>
+  if(isError ||deleteBlog.isError) toast.error(deleteBlog.error)
 
     
 const user = localStorage.getItem("userInfo")
@@ -23,6 +29,10 @@ const userInfo = JSON.parse(user)
 
 const handleUpdate=(post)=>{
   setUpdatedPost({title:post.title, description:post.description, postId:post._id})
+}
+
+const handleDelete=(post)=>{
+deleteBlog.mutate({postId:post._id, imgPublicId:post.imgPublicId})  
 }
 
 return (
@@ -60,7 +70,7 @@ return (
       {userInfo?.role ? (
         <div className="w-full flex items-center justify-start gap-4">
         <Button onClick={()=>handleUpdate(post)} color="green">Update</Button>
-        <Button color="red">Delete</Button>
+        <Button onClick={()=>handleDelete(post)} color="red">Delete</Button>
         </div>
       ):""}
       </Card>

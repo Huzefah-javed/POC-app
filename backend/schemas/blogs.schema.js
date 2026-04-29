@@ -12,6 +12,9 @@ const blogSchema = new Schema({
     imgUrl:{
         type:String,
     },
+    imgPublicId:{
+        type:String,
+    },
    adminId:{
     type: Schema.Types.ObjectId,
     required:true

@@ -1,4 +1,4 @@
-import { uploadToCloud } from "../helpers/cloud.upload.js"
+import { deleteFromCloud, uploadToCloud } from "../helpers/cloud.upload.js"
 import { roleChecker } from "../helpers/roleChecker.js"
 import { createBlog, deleteBlog, getBlogs, updateBlog } from "../models/admin.model.js"
 import fs from "fs/promises"
@@ -10,12 +10,12 @@ export const createBlogController =async(req, res, next)=>{
         return next({status:401, msg:"Unauthorized route"})
     }
     const {title, description } = req.body
-    const url = await uploadToCloud(req.file.path)
-    if (!url) {
+    const urlData = await uploadToCloud(req.file.path)
+    if (!urlData) {
        await fs.unlink(req.file.path)
         return next({status:500, msg:"Upload failed, plz try again"})
     }
-     const response = await createBlog(title, description, url, req.user._id)
+     const response = await createBlog(title, description, urlData.imgUrl, urlData.imgPublicId, req.user._id)
      fs.unlink(req.file.path)
      if(!response.success) return next({status:response.status, msg:response.msg})
      return res.status(response.status).json({msg:response.msg})
@@ -43,10 +43,14 @@ export const deleteBlogController =async(req, res, next)=>{
     }
 
     const { id } = req.params
-
+    const { imgPublicId } = req.query
+    
+    const result = await deleteFromCloud(imgPublicId)
+    if (!result) {
+        return next({status:500, msg:"Delete Operation failed"})
+    }
     const response = await deleteBlog(id)
     if(!response.success) return next({status:response.status, msg:response.msg})
-    // await deleteFromCloud()
     return res.status(response.status).json({msg:response.msg})
 }
 

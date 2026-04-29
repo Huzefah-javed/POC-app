@@ -2,12 +2,12 @@ import mongoose from "mongoose"
 import { blogs } from "../schemas/blogs.schema.js"
 
 
-export const createBlog=async(title, description, imgUrl, adminId)=>{
+export const createBlog=async(title, description, imgUrl, imgPublicId, adminId)=>{
     let response={}
     try {
         const adminObjectId = new mongoose.Types.ObjectId(adminId)
         // console.log("sdfj ",adminObjectId)
-       const data = await blogs.create({title, description, imgUrl, adminId:adminObjectId})
+       const data = await blogs.create({title, description, imgUrl, imgPublicId,adminId:adminObjectId})
         response.success=true
         response.status=201
         response.data=data
@@ -44,11 +44,10 @@ export const deleteBlog=async(blogId)=>{
     let response={}
     try {
         const blogObjectId = new mongoose.Types.ObjectId(blogId)
-          const data =  await blogs.findByIdAndDelete(blogObjectId)
+          const data =  await blogs.deleteOne({_id:blogObjectId})
         response.success=true
         response.status=200
         response.msg="Blog deleted successfully"
-        response.data = data
         return response
         } catch (error) {
         response.success=false

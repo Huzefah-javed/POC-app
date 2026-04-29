@@ -14,3 +14,7 @@ export const updatePost=async(post)=>{
 const res =  await api.put(`admin/update/${post.postId}`, {title:post.title, description:post.description})
 return res.data
 }
+export const deletePost=async({postId, imgPublicId})=>{
+const res =  await api.delete(`admin/delete/${postId}?imgPublicId=${imgPublicId}`)
+return res.data
+}
