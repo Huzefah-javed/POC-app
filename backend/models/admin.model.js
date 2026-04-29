@@ -62,7 +62,23 @@ export const getBlogs=async(pageNo)=>{
     let response={}
     try {
         const skip = (pageNo-1)*10
-            const data = await blogs.find().sort({_id:-1}).skip(skip).limit(10)
+            const data = await blogs.aggregate([
+                {
+                    $lookup:{
+                        from:"users",
+                        foreignField:"_id",
+                        localField:"adminId",
+                        as:"admin"
+                    }
+                },
+                {$unwind:"$admin"},
+                {
+                    $project:{
+                        "admin.password":0,
+                        "admin.email":0,
+                    }
+                }
+            ]).sort({_id:-1}).skip(skip).limit(10)
         response.success=true
         response.status=200
         response.data=data

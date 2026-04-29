@@ -9,3 +9,8 @@ export const createPost=async(post)=>{
 const res =  await api.post(`admin/create`, post)
 return res.data
 }
+
+export const updatePost=async(post)=>{
+const res =  await api.put(`admin/update/${post.postId}`, {title:post.title, description:post.description})
+return res.data
+}
