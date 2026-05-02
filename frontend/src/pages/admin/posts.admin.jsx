@@ -1,4 +1,4 @@
-import { Table, TableHead, TableBody, TableRow, TableCell, TableHeadCell, Button } from "flowbite-react"
+import { Table, TableHead, TableBody, TableRow, TableCell, TableHeadCell, Button, Pagination, PaginationButton } from "flowbite-react"
 import { useState } from "react"
 import { getAdminBlogs } from "../../apis/admin/admin.api"
 import Loader from "../../components/Loader"
@@ -13,8 +13,10 @@ export const AdminPosts =()=>{
           if(isLoading) return <Loader/>
           if(isError) toast.error(error)
 
-            
-        console.log(data)
+            const handlePageChange = (pageNumber) => {
+  console.log("User wants to see page:", pageNumber);
+  setPageNo(pageNumber); // Update the state
+};
         
     return(
         <div className="bg-gray-700 w-full">
@@ -48,6 +50,13 @@ export const AdminPosts =()=>{
                     }
                 </TableBody>
               </Table>
+
+        <Pagination
+        className="text-center mt-12" 
+  currentPage={pageNo} 
+  totalPages={data?.data?.length === 10 ? pageNo + 1 : pageNo} 
+  onPageChange={handlePageChange} 
+/>
         </div>
     )
 }
