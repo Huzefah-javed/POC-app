@@ -6,7 +6,7 @@ return res.data
 }
 
 export const createPost=async(post)=>{
-const res =  await api.post(`admin/create`, post)
+    const res =  await api.post(`admin/create`, post)
 return res.data
 }
 
@@ -17,4 +17,9 @@ return res.data
 export const deletePost=async({postId, imgPublicId})=>{
 const res =  await api.delete(`admin/delete/${postId}?imgPublicId=${imgPublicId}`)
 return res.data
+}
+
+export const getAdminBlogs=async(pageNo)=>{
+    const res =  await api.get(`admin/adminBlogs?pageNo=${pageNo}`)
+    return res.data
 }

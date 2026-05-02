@@ -6,6 +6,7 @@ import { useState } from "react"
 import {Avatar, Badge, Button, Card} from "flowbite-react"
 import { UpdatePost } from "../../components/UpdatePost"
 import { useExecute } from "../../hooks/useExecute"
+import { CreatePost } from "../../components/CreatePost.admin"
 
 export const BlogPage=()=>{
 const [pageNo, setPageNo] = useState(1)
@@ -13,7 +14,9 @@ const [updatedPost, setUpdatedPost] = useState({
   title:"", description:"", postId:""                                                       
 })
 
-const {data,error,isError,isLoading} = useFetch(()=>getBlogs(pageNo),["AdminBlogs",pageNo])
+const [createPostMode, setCreatePostMode] = useState(false)
+
+const {data,error,isError,isLoading} = useFetch(()=>getBlogs(pageNo),["blogs",pageNo])
 
 const onSuccess = ()=> toast.success("Post deleted successfully")
 const onError = ()=> toast.error("Post deletion operation failed")
@@ -37,8 +40,9 @@ deleteBlog.mutate({postId:post._id, imgPublicId:post.imgPublicId})
 
 return (
       <div className="bg-gray-700 w-full">
-      <header className="w-full p-3 bg-gray-600 ">
+      <header className="flex justify-between items-center w-full p-3 bg-gray-600 ">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white w-full p-2">Feeds</h1>
+      <Button onClick={()=> setCreatePostMode(true)} color="blue" className="text-center">Create Post</Button>
       </header>
       {
         data.data.map((post)=>{
@@ -86,6 +90,13 @@ return (
       postId={updatedPost.postId}
       onClose={()=>setUpdatedPost({title:"", description:"", postId:""})}
       />
+    }
+    {
+      createPostMode &&
+      <CreatePost
+      onClose={()=>setCreatePostMode(false)}
+      />
+
     }
       </div>
     )

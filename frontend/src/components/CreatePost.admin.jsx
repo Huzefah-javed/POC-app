@@ -1,11 +1,11 @@
 import {Button, Card, FileInput, Label, Textarea, TextInput} from "flowbite-react"
 import { useState } from "react"
-import { useExecute } from "../../hooks/useExecute"
-import { createPost } from "../../apis/admin/admin.api"
-import Loader from "../../components/Loader"
+import { useExecute } from "../hooks/useExecute"
+import { createPost } from "../apis/admin/admin.api"
+import Loader from "./Loader"
 import { toast } from "react-toastify"
 
-export const CreatePost=()=>{
+export const CreatePost=({onClose})=>{
 
     const [post, setPost] = useState({
         title:"",
@@ -35,11 +35,9 @@ const handleSubmit =(e)=>{
 
 return(
 
-    <div className="bg-gray-700 w-full">
-      <header className="w-full p-3 bg-gray-600 ">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-white w-full p-2">Create Post</h1>
-      </header>
-            <form onSubmit={handleSubmit}>
+    <div className="w-full h-dvh flex justify-center items-center fixed top-0 left-0 bg-[#0000003b]">
+        <Button className=" w-12 h-12 relative -top-[40%] left-[82%] rounded-[50%]" onClick={onClose}>X</Button>
+      <form onSubmit={handleSubmit} className="w-[80%]">
         <Card>
 
            <Label htmlFor="title" >Title</Label>

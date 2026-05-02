@@ -44,7 +44,7 @@ export const deleteBlog=async(blogId)=>{
     let response={}
     try {
         const blogObjectId = new mongoose.Types.ObjectId(blogId)
-          const data =  await blogs.deleteOne({_id:blogObjectId})
+        const data =  await blogs.deleteOne({_id:blogObjectId})
         response.success=true
         response.status=200
         response.msg="Blog deleted successfully"
@@ -78,6 +78,27 @@ export const getBlogs=async(pageNo)=>{
                     }
                 }
             ]).sort({_id:-1}).skip(skip).limit(10)
+        response.success=true
+        response.status=200
+        response.data=data
+        return response
+        } catch (error) {
+            console.log(error)
+        response.success=false
+        response.status=500
+        response.msg="something wrong happens while fetching blog"
+        return response
+    }
+}
+
+export const getAdminsBlogs=async(pageNo, adminId)=>{
+    let response={}
+    const adminObjectId = new mongoose.Types.ObjectId(adminId)
+    try {
+        const skip = (pageNo-1)*10
+            const data = await blogs.find(
+                {adminId:adminObjectId}, {_id:1, title:1}
+            ).sort({_id:-1}).skip(skip).limit(10)
         response.success=true
         response.status=200
         response.data=data
