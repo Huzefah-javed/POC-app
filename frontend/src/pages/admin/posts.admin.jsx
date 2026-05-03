@@ -1,25 +1,39 @@
 import { Table, TableHead, TableBody, TableRow, TableCell, TableHeadCell, Button, Pagination, PaginationButton } from "flowbite-react"
 import { useState } from "react"
-import { getAdminBlogs } from "../../apis/admin/admin.api"
+import { deletePost, getAdminBlogs } from "../../apis/admin/admin.api"
 import Loader from "../../components/Loader"
 import { useFetch } from "../../hooks/useFetch"
 import { toast } from "react-toastify"
+import { UpdatePost } from "../../components/UpdatePost"
+import { useExecute } from "../../hooks/useExecute"
 
 export const AdminPosts =()=>{
         const [pageNo, setPageNo] = useState(1)
+        const [updatedPost, setUpdatedPost] = useState({
+         title:"", description:"", postId:""                                                       
+            })
         const {data,error,isError,isLoading} = useFetch(()=>getAdminBlogs(pageNo),["AdminBlogs",pageNo])
-        
-        
-          if(isLoading) return <Loader/>
-          if(isError) toast.error(error)
-
+            const onSuccess = ()=> toast.success("Post deleted successfully")
+            const onError = ()=> toast.error("Post deletion operation failed")
+            
+            const deleteBlog = useExecute(deletePost, onSuccess, onError) 
+            
+              if(isLoading || deleteBlog.isPending) return <Loader/>
+              if(isError ||deleteBlog.isError) toast.error(deleteBlog.error)
+            
             const handlePageChange = (pageNumber) => {
-  console.log("User wants to see page:", pageNumber);
-  setPageNo(pageNumber); // Update the state
-};
-        
-    return(
-        <div className="bg-gray-700 w-full">
+                setPageNo(pageNumber); 
+            };
+            
+            const handleUpdate=(post)=>{
+                setUpdatedPost({title:post.title, description:post.description, postId:post._id})
+                }
+    
+                const handleDelete=(post)=>{
+                deleteBlog.mutate({postId:post._id, imgPublicId:post.imgPublicId})  
+            }
+            return(
+                <div className="bg-gray-700 w-full">
               <header className="flex justify-between items-center w-full p-3 bg-gray-600 ">
                 <h1 className="text-4xl font-bold text-gray-900 dark:text-white w-full p-2">Your Blogs</h1>
               </header>
@@ -41,8 +55,8 @@ export const AdminPosts =()=>{
                                 <TableCell className="border border-white">{item.title}</TableCell>
                                 <TableCell className="border border-white w-full flex items-center justify-start gap-6">
                                <Button color="blue">View</Button>
-                               <Button color="green">Update</Button>
-                                <Button color="red">Delete</Button>
+                               {/* <Button onClick={()=>handleUpdate(item)} color="green">Update</Button> */}
+                                <Button onClick={()=>handleDelete(item)} color="red">Delete</Button>
                     </TableCell>
                                 </TableRow>        
                     )
@@ -57,6 +71,18 @@ export const AdminPosts =()=>{
   totalPages={data?.data?.length === 10 ? pageNo + 1 : pageNo} 
   onPageChange={handlePageChange} 
 />
+
+
+{
+      (updatedPost.postId && updatedPost.title && updatedPost.description)
+       &&  
+      <UpdatePost 
+      currentTitle={updatedPost.title}
+      currentDescription={updatedPost.description}
+      postId={updatedPost.postId}
+      onClose={()=>setUpdatedPost({title:"", description:"", postId:""})}
+      />
+    }
         </div>
     )
 }

@@ -1,42 +1,26 @@
 import { toast } from "react-toastify"
-import { deletePost, getBlogs } from "../../apis/admin/admin.api"
+import { getBlogs } from "../../apis/admin/admin.api"
 import Loader from "../../components/Loader"
 import { useFetch } from "../../hooks/useFetch"
 import { useState } from "react"
-import {Avatar, Badge, Button, Card} from "flowbite-react"
+import {Avatar, Badge, Button, Card, Pagination} from "flowbite-react"
 import { UpdatePost } from "../../components/UpdatePost"
-import { useExecute } from "../../hooks/useExecute"
 import { CreatePost } from "../../components/CreatePost.admin"
 
 export const BlogPage=()=>{
 const [pageNo, setPageNo] = useState(1)
-const [updatedPost, setUpdatedPost] = useState({
-  title:"", description:"", postId:""                                                       
-})
+
 
 const [createPostMode, setCreatePostMode] = useState(false)
 
 const {data,error,isError,isLoading} = useFetch(()=>getBlogs(pageNo),["blogs",pageNo])
 
-const onSuccess = ()=> toast.success("Post deleted successfully")
-const onError = ()=> toast.error("Post deletion operation failed")
+  if(isLoading) return <Loader/>
+  if(isError) toast.error(deleteBlog.error)
 
-const deleteBlog = useExecute(deletePost, onSuccess, onError) 
-
-  if(isLoading || deleteBlog.isPending) return <Loader/>
-  if(isError ||deleteBlog.isError) toast.error(deleteBlog.error)
-
-    
-const user = localStorage.getItem("userInfo")
-const userInfo = JSON.parse(user)
-
-const handleUpdate=(post)=>{
-  setUpdatedPost({title:post.title, description:post.description, postId:post._id})
-}
-
-const handleDelete=(post)=>{
-deleteBlog.mutate({postId:post._id, imgPublicId:post.imgPublicId})  
-}
+ const handlePageChange = (pageNumber) => {
+                setPageNo(pageNumber); 
+            };
 
 return (
       <div className="bg-gray-700 w-full">
@@ -71,26 +55,11 @@ return (
         { post.imgUrl &&
           <img className="w-full max-h-1/2" src={post.imgUrl} alt="error" />
         } 
-      {userInfo?.role ? (
-        <div className="w-full flex items-center justify-start gap-4">
-        <Button onClick={()=>handleUpdate(post)} color="green">Update</Button>
-        <Button onClick={()=>handleDelete(post)} color="red">Delete</Button>
-        </div>
-      ):""}
       </Card>
         )
       })
 }
-    {
-      (updatedPost.postId && updatedPost.title && updatedPost.description)
-       &&  
-      <UpdatePost 
-      currentTitle={updatedPost.title}
-      currentDescription={updatedPost.description}
-      postId={updatedPost.postId}
-      onClose={()=>setUpdatedPost({title:"", description:"", postId:""})}
-      />
-    }
+    
     {
       createPostMode &&
       <CreatePost
@@ -98,6 +67,13 @@ return (
       />
 
     }
+
+          <Pagination
+            className="text-center my-12" 
+      currentPage={pageNo} 
+      totalPages={data?.data?.length === 10 ? pageNo + 1 : pageNo} 
+      onPageChange={handlePageChange} 
+    />
       </div>
     )
 }
