@@ -8,7 +8,7 @@ import { error } from "./middlewares/error.js";
 const app = express();
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
+  origin: [process.env.FRONTEND_URL, "https://poc-app-juo8.vercel.app/"],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }))
