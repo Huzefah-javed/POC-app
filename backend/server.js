@@ -25,10 +25,11 @@ app.use(mainRouter)
 app.use(error)
 try {
     await mongoose.connect(process.env.MONGODB_URL)
-    console.log("db connects")
-    app.listen(process.env.PORT, ()=>{
+    app.listen(process.env.PORT || 5000, ()=>{
         console.log("server runs....", process.env.PORT)    
     })
 } catch (error) {
     console.log("Error happens in server or database connection")
 }
+
+export default app; 
