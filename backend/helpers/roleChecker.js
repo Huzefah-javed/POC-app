@@ -1,9 +1,12 @@
-export const roleChecker=(role, actualRole)=>{
-    if(role === actualRole) return 
-    else{
+export const roleChecker=(role)=>{
+
+    return (req, res, next)=>{
+
+        if(role === req.user.role) return next()
+        else{
         const error = new Error("unauthorized, the role is incorrect")
-        error.status = 401
-        throw error     
+        next(error)    
+    }
     }
     
 }

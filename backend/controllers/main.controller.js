@@ -1,5 +1,5 @@
 import { assignJWTCookie } from "../jwt/authCookie.js"
-import { login } from "../models/main.model.js"
+import { getBlogs, login } from "../models/main.model.js"
 
 export const loginController=async(req, res, next)=>{
     const {email,password, role} = req.body
@@ -13,4 +13,13 @@ export const loginController=async(req, res, next)=>{
 export const logoutController=async(req, res, next)=>{
     res.clearCookie("authCookie")
    return res.json({msg:"logout successfully"})
+}
+
+export const getBlogsController =async(req, res, next)=>{
+
+    const { pageNo=0 } = req.query
+
+    const response = await getBlogs(pageNo)
+    if(!response.success) return next({status:response.status, msg:response.msg})
+    return res.status(response.status).json({data:response.data})
 }

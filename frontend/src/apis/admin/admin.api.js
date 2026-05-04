@@ -1,7 +1,8 @@
 import api from "../main.api";
 
-export const getBlogs=async(pageNo)=>{
-const res =  await api.get(`admin/blogs?pageNo=${pageNo}`)
+
+export const singlePost=async(postId)=>{
+const res =  await api.get(`admin/blogs/${postId}`)
 return res.data
 }
 

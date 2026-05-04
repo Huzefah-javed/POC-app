@@ -1,5 +1,5 @@
 import { toast } from "react-toastify"
-import { getBlogs } from "../../apis/admin/admin.api"
+import { getBlogs } from "../../apis/main.api"
 import Loader from "../../components/Loader"
 import { useFetch } from "../../hooks/useFetch"
 import { useState } from "react"

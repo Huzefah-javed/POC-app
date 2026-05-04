@@ -5,6 +5,7 @@ import { SidebarComponent } from "./components/sidebar"
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom"
 import { Structure } from "./structure/Structure"
 import { AdminPosts } from "./pages/admin/posts.admin"
+import { ViewPost } from "./pages/admin/ViewPost"
 
 export const App =()=>{
 const router = createBrowserRouter([
@@ -19,8 +20,8 @@ const router = createBrowserRouter([
         }/>,
         children:[
             {path:"/admin/blogs", element:<BlogPage/>},
-            {path:"/admin/viewPosts", element:<AdminPosts/>}
-                
+            {path:"/admin/blogs/:postId", element:<ViewPost/>},
+            {path:"/admin/viewPosts", element:<AdminPosts/>}        
         ]
     },
     {

@@ -6,6 +6,7 @@ import { useFetch } from "../../hooks/useFetch"
 import { toast } from "react-toastify"
 import { UpdatePost } from "../../components/UpdatePost"
 import { useExecute } from "../../hooks/useExecute"
+import { Link } from "react-router"
 
 export const AdminPosts =()=>{
         const [pageNo, setPageNo] = useState(1)
@@ -54,7 +55,7 @@ export const AdminPosts =()=>{
                                 <TableCell className="border border-white">{item._id}</TableCell>
                                 <TableCell className="border border-white">{item.title}</TableCell>
                                 <TableCell className="border border-white w-full flex items-center justify-start gap-6">
-                               <Button color="blue">View</Button>
+                               <Button color="blue"> <Link to={`/admin/blogs/${item._id}`}>View</Link></Button>
                                {/* <Button onClick={()=>handleUpdate(item)} color="green">Update</Button> */}
                                 <Button onClick={()=>handleDelete(item)} color="red">Delete</Button>
                     </TableCell>
@@ -66,7 +67,7 @@ export const AdminPosts =()=>{
               </Table>
 
         <Pagination
-        className="text-center mt-12" 
+        className="text-center my-12" 
   currentPage={pageNo} 
   totalPages={data?.data?.length === 10 ? pageNo + 1 : pageNo} 
   onPageChange={handlePageChange} 

@@ -57,27 +57,12 @@ export const deleteBlog=async(blogId)=>{
     }
 }
 
-export const getBlogs=async(pageNo)=>{
+
+export const getSingleBlogs=async(postId)=>{
     let response={}
     try {
-        const skip = (pageNo-1)*10
-            const data = await blogs.aggregate([
-                {
-                    $lookup:{
-                        from:"users",
-                        foreignField:"_id",
-                        localField:"adminId",
-                        as:"admin"
-                    }
-                },
-                {$unwind:"$admin"},
-                {
-                    $project:{
-                        "admin.password":0,
-                        "admin.email":0,
-                    }
-                }
-            ]).sort({_id:-1}).skip(skip).limit(10)
+        const postObjId = new mongoose.Types.ObjectId(postId)
+          const data = await blogs.findById(postObjId, {title:1, description:1, imgUrl:1})
         response.success=true
         response.status=200
         response.data=data
