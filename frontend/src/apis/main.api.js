@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const api = axios.create({
-    baseURL:"https://poc-app-mocha.vercel.app",
+    baseURL:"/_/backend",
     withCredentials: true
 })
 
