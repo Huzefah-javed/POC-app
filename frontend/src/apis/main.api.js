@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const api = axios.create({
-    baseURL:"https://poc-43v2w81im-huzefah-javeds-projects.vercel.app/",
+    baseURL:"https://poc-app-mocha.vercel.app",
     withCredentials: true
 })
 
