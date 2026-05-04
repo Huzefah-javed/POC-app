@@ -1,11 +1,11 @@
 import { toast } from "react-toastify"
-import { getBlogs } from "../../apis/main.api"
-import Loader from "../../components/Loader"
-import { useFetch } from "../../hooks/useFetch"
+import { getBlogs } from "../apis/main.api"
+import Loader from "../components/Loader"
+import { useFetch } from "../hooks/useFetch"
 import { useState } from "react"
 import {Avatar, Badge, Button, Card, Pagination} from "flowbite-react"
-import { UpdatePost } from "../../components/UpdatePost"
-import { CreatePost } from "../../components/CreatePost.admin"
+import { UpdatePost } from "../components/UpdatePost"
+import { CreatePost } from "../components/CreatePost.admin"
 
 export const BlogPage=()=>{
 const [pageNo, setPageNo] = useState(1)
@@ -22,11 +22,13 @@ const {data,error,isError,isLoading} = useFetch(()=>getBlogs(pageNo),["blogs",pa
                 setPageNo(pageNumber); 
             };
 
+const userData = JSON.parse(localStorage.getItem("userInfo"))
+
 return (
       <div className="bg-gray-700 w-full">
       <header className="flex justify-between items-center w-full p-3 bg-gray-600 ">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white w-full p-2">Feeds</h1>
-      <Button onClick={()=> setCreatePostMode(true)} color="blue" className="text-center">Create Post</Button>
+      {userData.role === "admin"? (<Button onClick={()=> setCreatePostMode(true)} color="blue" className="text-center">Create Post</Button>):""}
       </header>
       {
         data.data.map((post)=>{
