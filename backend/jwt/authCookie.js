@@ -11,6 +11,9 @@ export  function assignJWTCookie(data, res){
 
    return res.cookie("authCookie", token, {
         httpOnly: true,           
+         secure: true,      
+         sameSite: "none", 
+         path: "/",
         maxAge: 2 * 60 * 60 * 1000  
     })
 }
